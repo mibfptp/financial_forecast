@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3分鐘生涯財務預測圖</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .chart-container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .narrative-text {
+            font-size: 1.25rem;
+            line-height: 1.8;
+        }
+        .narrative-text span {
+            font-weight: bold;
+            color: #2563eb; /* blue-600 */
+            font-size: 1.5rem;
+            margin: 0 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">3分鐘生涯財務預測圖</h1>
+            <p class="text-md text-gray-600 mt-2">填寫以下問卷，探索您未來的財務藍圖。</p>
+        </header>
+
+        <div id="form-section" class="form-container bg-white p-8 rounded-2xl shadow-lg">
+            <div class="space-y-6">
+                <!-- Question 1 & 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">1. 我該怎麼稱呼您？</label>
+                        <input type="text" id="name" value="陳先生" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                    <div>
+                        <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">2. 您的生理性別是？</label>
+                        <select id="gender" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <option value="male">男性 (平均餘命 77 歲)</option>
+                            <option value="female">女性 (平均餘命 84 歲)</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Question 3 -->
+                <div>
+                    <label for="currentAge" class="block text-sm font-medium text-gray-700 mb-1">3. 您現在幾歲？ (歲)</label>
+                    <input type="number" id="currentAge" value="33" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                </div>
+                 <!-- Question 4 & 5 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="startWorkAge" class="block text-sm font-medium text-gray-700 mb-1">4. 您從幾歲開始工作？ (歲)</label>
+                        <input type="number" id="startWorkAge" value="23" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                    <div>
+                        <label for="retirementAge" class="block text-sm font-medium text-gray-700 mb-1">5. 您預計想要在幾歲退休？ (歲)</label>
+                        <input type="number" id="retirementAge" value="65" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                </div>
+                <!-- Question 6 & 7 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                       <label for="pastAnnualIncome" class="block text-sm font-medium text-gray-700 mb-1">6. 您工作至今的平均年收入大約是？ (萬元)</label>
+                        <input type="number" id="pastAnnualIncome" value="80" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                     <div>
+                        <label for="futureAnnualIncome" class="block text-sm font-medium text-gray-700 mb-1">7. 您預期未來平均「年」收入有多少？ (萬元)</label>
+                        <input type="number" id="futureAnnualIncome" value="100" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                </div>
+
+                <!-- Question 8 & 9 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div>
+                        <label for="currentSavings" class="block text-sm font-medium text-gray-700 mb-1">8. 您目前儲蓄 / 投資的總計金額為？ (萬元)</label>
+                        <input type="number" id="currentSavings" value="200" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                    <div>
+                        <label for="currentDebt" class="block text-sm font-medium text-gray-700 mb-1">9. 您目前有任何貸款、負債嗎？ (萬元)</label>
+                        <input type="number" id="currentDebt" value="0" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                </div>
+
+                <!-- Question 10 -->
+                <div>
+                    <label for="debtYears" class="block text-sm font-medium text-gray-700 mb-1">10. 如果有任何貸款、負債，預計還要再繳款幾年？ (年)</label>
+                    <input type="number" id="debtYears" value="0" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                </div>
+
+                <!-- Question 11 & 12 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="inheritanceAmount" class="block text-sm font-medium text-gray-700 mb-1">11. 您預計會從家人繼承的財產有多少？ (萬元)</label>
+                        <input type="number" id="inheritanceAmount" value="0" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                    <div>
+                        <label for="inheritanceAge" class="block text-sm font-medium text-gray-700 mb-1">12. 您預計幾歲會從家人繼承財產？ (歲)</label>
+                        <input type="number" id="inheritanceAge" value="0" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                </div>
+                
+                 <!-- Question 13 & 14 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                         <label for="savingsRatio" class="block text-sm font-medium text-gray-700 mb-1">13. 您認為打理薪資收入的理想方式是？</label>
+                         <div class="mt-1 text-center">
+                            <span class="font-semibold text-blue-600" id="savingsRatioDisplay"></span>
+                         </div>
+                         <input type="range" id="savingsRatio" min="0" max="10" value="3" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2">
+                         <div class="flex justify-between text-xs text-gray-600 px-1">
+                            <span>100% 儲蓄投資</span>
+                            <span>100% 一般支出</span>
+                         </div>
+                    </div>
+                    <div>
+                        <label for="investmentType" class="block text-sm font-medium text-gray-700 mb-1">14. 您預計的儲蓄/投資方式？</label>
+                        <select id="investmentType" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <option value="savings" selected>儲蓄 (年利率 1.5%)</option>
+                            <option value="investment">投資 (年利率 5%)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Question 15 -->
+                <div>
+                    <label for="majorExpense" class="block text-sm font-medium text-gray-700 mb-1">15. 您是否十年內有結婚、生子、買房、買車、創業的財務夢想？預計總花費？ (萬元)</label>
+                    <input type="number" id="majorExpense" value="300" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                </div>
+
+                <!-- Question 16 -->
+                <div>
+                    <label for="retirementSpending" class="block text-sm font-medium text-gray-700 mb-1">16. 您希望退休後每年有多少錢可以花用？ (萬元)</label>
+                    <input type="number" id="retirementSpending" value="50" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <button id="generate-chart" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                    產生我的財務預測圖
+                </button>
+            </div>
+        </div>
+
+        <div id="chart-section" class="chart-container mt-12 bg-white p-8 rounded-2xl shadow-lg" style="display: none;">
+            <div id="narrative-container" class="mb-8 p-6 bg-blue-50 rounded-lg">
+                 <p id="narrative1" class="narrative-text text-gray-700"></p>
+                 <p id="narrative2" class="narrative-text text-gray-700 mt-2"></p>
+                 <p id="narrative3" class="narrative-text text-gray-700 mt-2"></p>
+            </div>
+            <div class="relative h-[60vh] max-h-[650px]">
+                <canvas id="financialChart"></canvas>
+            </div>
+            <div class="text-center mt-4 text-sm text-gray-500">
+                <p>■ 藍色：資產淨值為正 ■ 紅色：資產淨值為負</p>
+            </div>
+            <div class="text-center mt-8">
+                 <button id="back-to-form" class="bg-gray-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-600 transition">
+                    返回修改
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const generateBtn = document.getElementById('generate-chart');
+        const backBtn = document.getElementById('back-to-form');
+        const formSection = document.getElementById('form-section');
+        const chartSection = document.getElementById('chart-section');
+        const savingsRatioSlider = document.getElementById('savingsRatio');
+        const savingsRatioDisplay = document.getElementById('savingsRatioDisplay');
+        let financialChart = null;
+        
+        // 根據台灣內政部公布的簡易生命表數據 (取整數)
+        const MALE_LIFE_EXPECTANCY = 77;
+        const FEMALE_LIFE_EXPECTANCY = 84;
+        
+        function updateSavingsRatioDisplay() {
+            const spendingRatio = parseInt(savingsRatioSlider.value);
+            const spendingPercentage = spendingRatio * 10;
+            const savingsPercentage = 100 - spendingPercentage;
+            savingsRatioDisplay.textContent = `儲蓄投資 ${savingsPercentage}% / 一般支出 ${spendingPercentage}%`;
+        }
+        
+        if (savingsRatioSlider && savingsRatioDisplay) {
+            savingsRatioSlider.addEventListener('input', updateSavingsRatioDisplay);
+            updateSavingsRatioDisplay(); // Set initial value on load
+        }
+
+        generateBtn.addEventListener('click', () => {
+            const inputs = getFormInputs();
+            if (validateInputs(inputs)) {
+                const data = calculateFinancialProjection(inputs);
+                renderChart(data);
+                renderNarrative(inputs, data);
+                formSection.style.display = 'none';
+                chartSection.style.display = 'block';
+                window.scrollTo(0, 0);
+            }
+        });
+        
+        backBtn.addEventListener('click', () => {
+            formSection.style.display = 'block';
+            chartSection.style.display = 'none';
+             window.scrollTo(0, 0);
+        });
+
+
+        function getFormInputs() {
+            return {
+                name: document.getElementById('name').value,
+                gender: document.getElementById('gender').value,
+                currentAge: parseInt(document.getElementById('currentAge').value),
+                retirementAge: parseInt(document.getElementById('retirementAge').value),
+                futureAnnualIncome: parseFloat(document.getElementById('futureAnnualIncome').value),
+                currentSavings: parseFloat(document.getElementById('currentSavings').value),
+                inheritanceAmount: parseFloat(document.getElementById('inheritanceAmount').value),
+                inheritanceAge: parseInt(document.getElementById('inheritanceAge').value),
+                currentDebt: parseFloat(document.getElementById('currentDebt').value),
+                debtYears: parseInt(document.getElementById('debtYears').value),
+                startWorkAge: parseInt(document.getElementById('startWorkAge').value),
+                pastAnnualIncome: parseFloat(document.getElementById('pastAnnualIncome').value),
+                savingsRatio: parseInt(document.getElementById('savingsRatio').value),
+                majorExpense: parseFloat(document.getElementById('majorExpense').value),
+                investmentType: document.getElementById('investmentType').value,
+                retirementSpending: parseFloat(document.getElementById('retirementSpending').value),
+            };
+        }
+
+        function validateInputs(inputs) {
+            // 簡易驗證，確保數字欄位都有值
+            for (const key in inputs) {
+                if (typeof inputs[key] === 'number' && isNaN(inputs[key])) {
+                    alert(`請填寫 "${key}" 欄位！`);
+                    return false;
+                }
+            }
+             if (inputs.retirementAge <= inputs.currentAge) {
+                alert('退休年齡必須大於目前年齡！');
+                return false;
+            }
+            if (inputs.startWorkAge >= inputs.currentAge) {
+                alert('開始工作年齡必須小於目前年齡！');
+                return false;
+            }
+            return true;
+        }
+
+        function calculateFinancialProjection(inputs) {
+            const lifeExpectancy = inputs.gender === 'male' ? MALE_LIFE_EXPECTANCY : FEMALE_LIFE_EXPECTANCY;
+            const labels = Array.from({ length: lifeExpectancy - 18 + 1 }, (_, i) => i + 18);
+            const accumulatedAssets = [];
+            
+            let currentAsset = inputs.currentSavings - inputs.currentDebt;
+            const annualDebtPayment = inputs.debtYears > 0 ? inputs.currentDebt / inputs.debtYears : 0;
+            const investmentRate = inputs.investmentType === 'investment' ? 0.05 : 0.015;
+            const annualSavingAmount = inputs.futureAnnualIncome * (1 - inputs.savingsRatio / 10);
+            
+            let totalIncome = 0;
+            let totalSpending = 0;
+
+            for (let age = 18; age <= lifeExpectancy; age++) {
+                // 計算累積資產
+                if (age < inputs.currentAge) {
+                    // 估算過去資產累積
+                    const yearsWorkedBefore = inputs.currentAge - inputs.startWorkAge;
+                    if (age >= inputs.startWorkAge && yearsWorkedBefore > 0 && inputs.pastAnnualIncome > 0) {
+                        const pastSavingRate = (inputs.currentSavings / yearsWorkedBefore) / inputs.pastAnnualIncome;
+                        const pastAnnualSaving = inputs.pastAnnualIncome * pastSavingRate;
+                         currentAsset = (age - inputs.startWorkAge + 1) * pastAnnualSaving;
+                    } else {
+                        currentAsset = 0;
+                    }
+                } else if (age === inputs.currentAge) {
+                    currentAsset = inputs.currentSavings - inputs.currentDebt;
+                } else { // age > inputs.currentAge
+                    // 未來資產增長
+                    currentAsset *= (1 + investmentRate); // 投資/儲蓄增長
+
+                    if (age <= inputs.retirementAge) {
+                        currentAsset += annualSavingAmount; // 每年儲蓄
+                        totalIncome += inputs.futureAnnualIncome;
+                        totalSpending += inputs.futureAnnualIncome * (inputs.savingsRatio / 10);
+
+                        // 扣除負債
+                        if (age < inputs.currentAge + inputs.debtYears) {
+                            currentAsset -= annualDebtPayment;
+                        }
+                    } else {
+                         // 退休後
+                         const inflatedSpending = inputs.retirementSpending * Math.pow(1.02, age - inputs.retirementAge);
+                         currentAsset -= inflatedSpending;
+                    }
+                    
+                    // 加上繼承
+                    if (age === inputs.inheritanceAge) {
+                        currentAsset += inputs.inheritanceAmount;
+                    }
+                    
+                    // 扣除夢想基金
+                    if (age === inputs.currentAge + 10) {
+                        currentAsset -= inputs.majorExpense;
+                    }
+                }
+                accumulatedAssets.push(currentAsset);
+            }
+
+            return { labels, accumulatedAssets, totalIncome, totalSpending };
+        }
+
+        function renderNarrative(inputs, data) {
+            const { name, startWorkAge, retirementAge, majorExpense, futureAnnualIncome, currentAge } = inputs;
+            const yearsToRetire = retirementAge - currentAge;
+            const workDuration = currentAge - startWorkAge;
+            const savingPercentage = (1 - inputs.savingsRatio / 10) * 100;
+            const futureSavingAmount = futureAnnualIncome * (1 - inputs.savingsRatio/10);
+
+
+            const narrative1 = `嗨，${name}！您今年 <span>${currentAge}</span> 歲，已經工作了 <span>${workDuration}</span> 年。`;
+            
+            const narrative2 = `您預計在 <span>${retirementAge}</span> 歲退休，並希望在未來十年花費 <span>${majorExpense.toLocaleString()}</span> 萬來完成夢想。`;
+            
+            const narrative3 = `根據您的規劃，未來每年收入 <span>${futureAnnualIncome.toLocaleString()}</span> 萬，其中 <span>${futureSavingAmount.toLocaleString()}</span> 萬 (${savingPercentage.toFixed(0)}%) 將用於投資理財，預計在退休前總共會賺進 <span>${Math.round(data.totalIncome).toLocaleString()}</span> 萬的收入，其中 <span>${Math.round(data.totalSpending).toLocaleString()}</span> 萬會用於一般消費支出。`;
+
+
+            document.getElementById('narrative1').innerHTML = narrative1;
+            document.getElementById('narrative2').innerHTML = narrative2;
+            document.getElementById('narrative3').innerHTML = narrative3;
+
+        }
+
+        function renderChart(data) {
+            const ctx = document.getElementById('financialChart').getContext('2d');
+            if (financialChart) {
+                financialChart.destroy();
+            }
+
+            const accumulatedAssetsBgColors = data.accumulatedAssets.map(v => v < 0 ? 'rgba(239, 68, 68, 0.5)' : 'rgba(59, 130, 246, 0.5)');
+            const accumulatedAssetsBorderColors = data.accumulatedAssets.map(v => v < 0 ? 'rgba(220, 38, 38, 1)' : 'rgba(59, 130, 246, 1)');
+
+            financialChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [
+                        {
+                            label: '累積資產 (萬)',
+                            data: data.accumulatedAssets,
+                            backgroundColor: accumulatedAssetsBgColors,
+                            borderColor: accumulatedAssetsBorderColors,
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: false,
+                            title: {
+                                display: true,
+                                text: '年齡'
+                            }
+                        },
+                        y: {
+                            stacked: false,
+                            title: {
+                                display: true,
+                                text: '金額 (萬元)'
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += Math.round(context.parsed.y).toLocaleString() + ' 萬';
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            display: false // 隱藏圖例，因為說明已在圖表下方
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
+
